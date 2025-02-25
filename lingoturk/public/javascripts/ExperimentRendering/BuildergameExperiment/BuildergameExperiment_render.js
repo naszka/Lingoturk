@@ -63,7 +63,7 @@
         };
 
         self.objects = []; // Objects that raycaster should consider when performing intersection checks
-        self.blocks = [] ;
+        self.blocks = [];
         self.isShiftKeyDown = false;
 
          self.params = {
@@ -161,10 +161,53 @@
             }
         };
 
+        this.parseBlocks = function(){
+
+        /**
+         * Extracts and returns all objects with BoxGeometry from the objects array
+         * @returns {Array} An array of objects containing position and color information
+         */
+          const results = [];
+
+              for (let i = 0; i < self.objects.length; i++) {
+                const object = self.objects[i];
+
+                // Check if the object has geometry and if it's a BoxGeometry
+                if (object.geometry && object.geometry.type === 'BoxGeometry') {
+                  // Get the color as a string from LegoColors
+                  let colorName = "Unknown";
+                  if (object.material && object.material.color) {
+                    const hexValue = object.material.color.getHex();
+
+                    // Find the corresponding color name in LegoColors
+                    for (const [name, value] of Object.entries(self.LegoColors)) {
+                      if (value === hexValue) {
+                        colorName = name;
+                        break;
+                      }
+                    }
+                  }
+
+                  // Create an entry with position array and color name
+                  const entry = {
+                    position: object.position.toArray(),
+                    color: colorName
+                  };
+
+                  results.push(entry);
+                }
+              }
+
+            return results;
+          }
+
         this.nextQuestion = function(){
+            // find what blocks are on grid
+
             // this should go into answer, but I am not sure  how to do that
-            self.questions[self.questionIndex].built_blocks = self.blocks
-            self.blocks = []
+            self.questions[self.questionIndex].built_blocks = self.parseBlocks()
+
+
             if(self.questionIndex + 1 < self.questions.length){
                 ++self.questionIndex;
             }else{
@@ -216,7 +259,6 @@
 
          // if the question refers to already built structure, now load it
          self.load_existing_structure(self.questions[self.questionIndex].starting_blocks)
-         self.blocks = self.questions[self.questionIndex].starting_blocks
 
          self.gui = new dat.GUI({ autoPlace: false });
          self.gui.domElement.id = 'gui';
@@ -455,7 +497,7 @@
 
                     // Add the new Lego brick to the objects array for raycaster to consider it when performing intersection checks
                     self.objects.push(legoBrick);
-                    self.blocks.push({position: legoBrick.position.toArray(), color: self.params.selectedColor});
+                    //self.blocks.push({position: legoBrick.position.toArray(), color: self.params.selectedColor});
                 }
                 // Render to visualize the changes
                 self.render();
@@ -468,7 +510,7 @@
                  legoMaterial = new THREE.MeshLambertMaterial({ color:self.LegoColors[blocks[i].color]});
                  var legoBrick = new THREE.Mesh(self.legoGeometry, legoMaterial);
 
-                 legoBrick.position.set(blocks[i].position[0],blocks[i].position[1],blocks[i].position[2])
+                 legoBrick.position.set(blocks[i].position[0], blocks[i].position[1], blocks[i].position[2])
                  self.scene.add(legoBrick);
                  // Add the new Lego brick to the objects array for raycaster to consider it when performing intersection checks
                  self.objects.push(legoBrick);
