@@ -207,6 +207,9 @@
             // this should go into answer, but I am not sure  how to do that
             self.questions[self.questionIndex].built_blocks = self.parseBlocks()
 
+            // capture screenshot of the canvas
+            self.lastScreenshot = this.captureScreenshot()
+
 
             if(self.questionIndex + 1 < self.questions.length){
                 ++self.questionIndex;
@@ -287,6 +290,29 @@
         requestAnimationFrame(this.animate.bind(this));
         this.render();
       };
+
+      this.captureScreenshot = function() {
+        // Render the scene with the current state
+        self.render();
+
+        // Use the renderer to get the canvas content as a data URL
+        const dataURL = self.renderer.domElement.toDataURL('image/jpeg');
+
+        // Create a temporary link element to trigger the download
+        const link = document.createElement('a');
+
+        // download ( will be needed for target collection
+        //link.href = dataURL;
+        //link.download = 'lego_scene_screenshot.jpg';
+        //link.click();
+
+        // store and return in a variable
+        lastScreenshot = dataURL;
+
+        return lastScreenshot;
+
+
+    }
 
 
       this.init = function () {
