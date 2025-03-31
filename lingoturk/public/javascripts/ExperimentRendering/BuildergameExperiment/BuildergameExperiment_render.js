@@ -368,11 +368,11 @@
             // default orientation of the plane is XY, but we want it to be XZ, parallel to the grid
             planeGeometry.rotateX(- Math.PI / 2); // rotate plane 90 degrees counterclockwise around the x-axis
             const planeMaterial = new THREE.MeshBasicMaterial({ visible: false })
-            plane = new THREE.Mesh(planeGeometry, planeMaterial);
-            self.scene.add(plane);
+            self.plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            self.scene.add(self.plane);
 
             // Add plane to objects array so that raycaster can consider it when performing intersection checks
-            self.objects.push(plane);
+            self.objects.push(self.plane);
 
             // Lighting
             // Ambient light - lights up all objects in the scene
