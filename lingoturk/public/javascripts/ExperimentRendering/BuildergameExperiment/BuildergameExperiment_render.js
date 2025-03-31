@@ -31,6 +31,7 @@
 
 
 
+
         self.statistics = [
             {name : "Age", type: "number", answer : undefined},
             {name : "Gender", type: "text", answer : ""},
@@ -320,7 +321,7 @@
 
             // Camera
             self.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-            self.camera.position.set(400, 800, 1200); // x, y, z
+            self.camera.position.set(400, 900, 950); // x, y, z
             self.camera.lookAt(0, 0, 0);
 
             // Scene
@@ -429,6 +430,7 @@
         };
 
         this.onPointerMove = function(event) {
+            if (self.isDisabledBuilding) return;
             if (!self.isShiftKeyDown) self.hoverLegoMesh.visible = true;
 
             container = document.getElementById('canvas-container');
@@ -473,6 +475,7 @@
         }
 
         this.onPointerDown = function(event) {
+            if (self.isDisabledBuilding) return;
             // Ignore right clicks and if orbit controls are enabled
             // if (event.button !== 0 || orbitControlsEnabled) return;
 
